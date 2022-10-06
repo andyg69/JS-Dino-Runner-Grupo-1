@@ -9,7 +9,7 @@ class ObstacleManager:
     def __init__(self):
         self.obstacles =[]
 
-    def update(self, game_speed,player,on_death):
+    def update(self,game_speed,player,on_death,reset_score):
         if len(self.obstacles)==0:
            n= random.randint(0,2)
            if n==0:
@@ -20,8 +20,8 @@ class ObstacleManager:
                 self.obstacles.append(Bird(BIRD))
 
         for obstacle in self.obstacles:
-            obstacle.update(game.game_speed,self.obstacles)
-            if game.player.dino_rect.colliderect(obstacle.rect):
+            obstacle.update(game_speed,self.obstacles)
+            if player.dino_rect.colliderect(obstacle.rect):
                 pygame.time.delay(500)
                 on_death()
                 break

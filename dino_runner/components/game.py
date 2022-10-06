@@ -1,3 +1,4 @@
+from pickle import FALSE
 import pygame
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
@@ -51,8 +52,8 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         #self.obstacles[0].update(self.game_speed, self.obstacles)
-        self.obstacle_manager.update(self.game_speed,self.player,self.on_death)
-        self.score.update(self)
+        self.obstacle_manager.update(self.game_speed,self.player,self.on_death,self.reset_score)
+        self.score.update(self,self.reset_score)
     def draw(self):
         self.clock.tick(FPS)
         self.screen.fill((255, 255, 255))
@@ -60,7 +61,7 @@ class Game:
         self.player.draw(self.screen)
         #self.obstacles[0].draw(self.screen)
         self.obstacle_manager.draw(self.screen)
-        self.score.draw(self.screen)
+        self.score.draw(self.screen)#
         pygame.display.update()
         pygame.display.flip()
         
@@ -80,18 +81,32 @@ class Game:
         half_screen_width = SCREEN_WIDTH // 2 
         if self.death_count == 0:  #mostrar mensaje de bienvenida
             font = pygame.font.Font(FONT_STYLE,30)
-            text_component =font.render("Press any key to start",True,(0,0,0))
+            text_component =font.render("Press any key to start",True,(0, 0, 0))
             text_rect = text_component.get_rect()
             text_rect.center = (half_screen_width,half_screen_height)
             self.screen.blit(text_component, text_rect)
         else:
-             #mostrar mensaje de volver a jugar(tarea)
-             #mostrar el numero de muertes actuales
+            self.screen.fill((255,255,255))  
+            half_screen_height = SCREEN_HEIGHT // 2 
+            half_screen_width = SCREEN_WIDTH // 2 
+            if self.death_count != 0:  
+                font = pygame.font.Font(FONT_STYLE,30)
+                text_component =font.render("Press any key to play again ",True,(0, 0, 0))#mostrar mensaje de volver a jugar(tarea)
+                text_rect = text_component.get_rect()
+                text_rect.center = (half_screen_width,half_screen_height)
+                self.screen.blit(text_component, text_rect)
+
+                text_death =font.render(f"Deaths: {self.death_count}",True,(0, 0, 0))#mostrar el numero de muertes actuales
+                text_rect = text_death.get_rect()#
+                text_rect.center = (1000,50)
+                self.screen.blit(text_death, text_rect)
+
+
              #mostrar el puntaje
             pass
         self.screen.blit(RUNNING[0],(half_screen_width-30,half_screen_height-140))  #mostrar icono
-        pygame.display.update #actualizar ventana
-        self.handle_key_events_on_menu()#escuchar eventos
+        pygame.display.update() #actualizar ventana
+        self.handle_key_events_on_menu()
     def handle_key_events_on_menu(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT :
@@ -104,3 +119,8 @@ class Game:
         self.death_count +=1
         print("Mori")
         print(f"Numero de muertes: {self.death_count}")
+
+    def reset_score(self):
+        if self.playing == False:
+            return True
+        
