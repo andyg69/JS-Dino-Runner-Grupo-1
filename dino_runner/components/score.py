@@ -5,13 +5,16 @@ from dino_runner.utils.constants import FONT_STYLE
 class Score:
     def __init__(self):
         self.score = 0
+        self.save_score =0
     def update(self,game,reset_score):
         self.score +=1
         if self.score % 100 == 0:
             game.game_speed +=2
         if reset_score():
+            self.save_score =self.score 
             self.score = 0
             game.game_speed = 20
+        
     def draw(self,screen):
         font = pygame.font.Font(FONT_STYLE,22)
         text_component =font.render(f"Score: {self.score}",True,(0,0,0))
