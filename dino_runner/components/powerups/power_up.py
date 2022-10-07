@@ -9,8 +9,7 @@ class PowerUp(Sprite):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.x =SCREEN_WIDTH + randint(800,1000)
-        self.rect.y =randint(125,175)
-
+        self.rect.y =randint(125,200)
         self.start_time=0
         self.duration=randint(5,7)
         
@@ -18,5 +17,6 @@ class PowerUp(Sprite):
         self.rect.x -= game_speed
         if self.rect.x < -self.rect.width:
             power_ups.pop()
+
     def draw(self,screen):
         screen.blit(self.image,(self.rect.x,self.rect.y))
